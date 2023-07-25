@@ -1,6 +1,7 @@
+import Language.Haskell.TH (safe)
 data Token =
-    LBRACE 
-    | RBRACE 
+    LBRACE
+    | RBRACE
     | LBRACKET
     | RBRACKET
     | QUOTATION
@@ -10,16 +11,17 @@ data Token =
 isLetter :: Char -> Bool
 isLetter c = c `elem` ['a'..'z'] || c `elem` ['A'..'Z']
 
-lexString :: String -> (String, String)
+lexString :: String -> Maybe (String, String)
 -- first string is the lexed string, second string is the remainder of the input
-lexString [] = ("", [])
-lexString (x:xs) =
-    if isLetter x
-        then
-            let (lexedString, remainder) = lexString xs in
-                (x:lexedString, remainder)
-        else
-            ("", x:xs)
+lexString [] = Nothing
+lexString (x : xs)
+  | x == '"' = return ("", xs)
+  | not (isLetter x) = Nothing
+  | otherwise = do
+        (lexedString :: String, remainder :: String) <- lexString xs
+        return (x:lexedString, remainder)
+
+
 
 
 lexTokens :: String -> Maybe [Token]
@@ -27,7 +29,7 @@ lexTokens [] = Just []
 lexTokens (x:xs) =
     if isLetter x
         then do
-            let (lexedString :: String, remainder :: String) = lexString (x:xs)
+            (lexedString :: String, remainder :: String) <- lexString (x:xs)
             let newToken :: Token = STRING lexedString in do
                 remainderTokens :: [Token] <- lexTokens remainder
                 return (newToken:remainderTokens)
@@ -42,9 +44,10 @@ lexTokens (x:xs) =
             in do
                 remainderTokens <- lexTokens xs
                 return (newToken:remainderTokens)
-            
+
+
 
 main :: IO ()
 main = do
-    let a = lexTokens "{aa}"
+    let a = lexTokens "{\"aa\"}"
     print a
