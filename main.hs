@@ -9,6 +9,7 @@ data Token =
     | COLON
     | TRUE
     | FALSE
+    | NULL
     deriving (Show)
 
 isLetter :: Char -> Bool
@@ -25,8 +26,6 @@ lexString (x : xs)
         return (x:lexedString, remainder)
 
 
-
-
 lexTokens :: String -> Maybe [Token]
 lexTokens [] = Just []
 lexTokens s =
@@ -38,6 +37,9 @@ lexTokens s =
         't' : 'r' : 'u' : 'e' : xs -> do
             remainderTokens <- lexTokens xs
             return (TRUE:remainderTokens)
+        'n' : 'u' : 'l' : 'l' : xs -> do
+            remainderTokens <- lexTokens xs
+            return (NULL:remainderTokens)
         x : xs ->
             if isLetter x
                 then do
@@ -63,5 +65,5 @@ lexTokens s =
 
 main :: IO ()
 main = do
-    let a = lexTokens "{\"aa\"}::::::::::,,,,,,}}}}{{{{{{true      false}}}}}}"
+    let a = lexTokens "{\"aa\"}:::::::::null:,,,,,,}}}}{{{{{{true      false}}}}}}"
     print a
