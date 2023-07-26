@@ -4,6 +4,7 @@ module Lexer (
 where
 
 import Tokens
+import Proc
 
 isLetter :: Char -> Bool
 isLetter c = c `elem` ['a'..'z'] || c `elem` ['A'..'Z']
@@ -11,20 +12,20 @@ isLetter c = c `elem` ['a'..'z'] || c `elem` ['A'..'Z']
 isDigit :: Char -> Bool
 isDigit c = c `elem` ['0'..'9']
 
-lexNumber :: String -> Maybe (Double, String)
+lexNumber :: String -> Proc (Double, String)
 lexNumber tokens = do
     (lexedDigits, remainder) <- lexDigits tokens False
     let number = read lexedDigits :: Double
     return (number, remainder)
 
-lexDigits :: String -> Bool -> Maybe (String, String)
+lexDigits :: String -> Bool -> Proc (String, String)
 -- string is the tokens
 -- is weather or not we have seen a decimal point
 
-lexDigits [] _ = Just ("", [])
+lexDigits [] _ = Suc ("", [])
 lexDigits (x:xs) seenDecimal
   | x == '.' = if seenDecimal
-                then Nothing
+                then Err "More than one decimal point in a number is not allowed"
                 else do
                     (lexedDigits, remainder) <- lexDigits xs True
                     return (x:lexedDigits, remainder)
@@ -34,18 +35,18 @@ lexDigits (x:xs) seenDecimal
   | otherwise = return ("", x:xs)
 
 
-lexString :: String -> Maybe (String, String)
+lexString :: String -> Proc (String, String)
 -- first string is the lexed string, second string is the remainder of the input
-lexString [] = Nothing
+lexString [] = Err "Missing closing quotation"
 lexString (x : xs)
   | x == '"' = return ("", xs)
-  | not (isLetter x) = Nothing
+  | not (isLetter x) = Err "Invalid character in string"
   | otherwise = do
         (lexedString, remainder) <- lexString xs
         return (x:lexedString, remainder)
 
-lexTokens :: String -> Maybe [Token]
-lexTokens [] = Just []
+lexTokens :: String -> Proc [Token]
+lexTokens [] = Suc []
 lexTokens s =
     case s of
         ' ' : xs -> lexTokens xs

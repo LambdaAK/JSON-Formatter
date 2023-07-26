@@ -36,3 +36,5 @@ executable json-parser
     other-modules:
         Tokens
         Lexer
+        Parser
+        Proc
