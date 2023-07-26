@@ -1,3 +1,2 @@
 build:
-	ghc main.hs
-	./main
+	cabal run
