@@ -23,6 +23,8 @@ parseNodesSeperatedByCommas tokens = do
         (RBRACKET : t) -> return ([first], RBRACKET : t) -- finished
         _ -> Err "expected comma or right bracket while parsing array"
 
+parseKeyValuePairsSeperatedByCommas :: [Token] -> Proc ([(String, Node)], [Token])
+parseKeyValuePairsSeperatedByCommas [] = undefined
 
 
 parse :: [Token] -> Proc (Node, [Token])
@@ -34,9 +36,8 @@ parse tokens =
         (TRUE : t) -> return (NBool True, t)
         (NULL : t) -> return (NNull, t)
         (NUMBER n : t) -> return (NNumber n, t)
-        
         (QUOTATION : STRING s : QUOTATION : t) -> return (NString s, t)
-        
+        (LBRACKET : RBRACKET : t) -> return (NArray [], t)
         (LBRACKET : t) -> do
             -- parse nodes seperated by commas
             (nodes :: [Node], tokensAfterNodes :: [Token]) <- parseNodesSeperatedByCommas t

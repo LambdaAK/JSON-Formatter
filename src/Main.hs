@@ -11,7 +11,7 @@ import AST
 
 main :: IO ()
 main =
-    let s = "[\"a\", false ,true]" in
+    let s = "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]" in
     let result :: Proc Node = do
             tokens :: [Token] <- lexTokens s
             (node :: Node, _) <- parse tokens
@@ -20,3 +20,7 @@ main =
     case result of
         Suc node -> print node
         Err e -> print e
+    
+    
+
+    

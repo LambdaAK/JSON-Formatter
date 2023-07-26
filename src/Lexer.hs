@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Lexer (
     lexTokens
 )
@@ -5,6 +6,8 @@ where
 
 import Tokens
 import Proc
+import Debug.Trace
+import Data.Function
 
 isLetter :: Char -> Bool
 isLetter c = c `elem` ['a'..'z'] || c `elem` ['A'..'Z']
@@ -40,7 +43,7 @@ lexString :: String -> Proc (String, String)
 lexString [] = Err "Missing closing quotation"
 lexString (x : xs)
   | x == '"' = return ("", x:xs)
-  | not (isLetter x) = Err "Invalid character in string"
+  | not (isLetter x) = return ("", x:xs)
   | otherwise = do
         (lexedString, remainder) <- lexString xs
         return (x:lexedString, remainder)
