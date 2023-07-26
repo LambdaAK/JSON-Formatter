@@ -1,5 +1,5 @@
 module AST (
-    AST(..)
+    Node(..)
 )
 where
 
@@ -10,4 +10,5 @@ data Node =
     | NString String
     | NArray [Node]
     | NObject [(String, Node)]
+    deriving (Show)
 

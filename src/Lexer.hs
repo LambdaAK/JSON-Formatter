@@ -39,7 +39,7 @@ lexString :: String -> Proc (String, String)
 -- first string is the lexed string, second string is the remainder of the input
 lexString [] = Err "Missing closing quotation"
 lexString (x : xs)
-  | x == '"' = return ("", xs)
+  | x == '"' = return ("", x:xs)
   | not (isLetter x) = Err "Invalid character in string"
   | otherwise = do
         (lexedString, remainder) <- lexString xs
