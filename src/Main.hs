@@ -11,7 +11,7 @@ import AST
 
 main :: IO ()
 main =
-    let s = "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]" in
+    let s = "null" in
     let result :: Proc Node = do
             tokens :: [Token] <- lexTokens s
             (node :: Node, _) <- parse tokens
