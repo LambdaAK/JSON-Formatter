@@ -38,3 +38,4 @@ executable json-parser
         Lexer
         Parser
         Proc
+        ToString
