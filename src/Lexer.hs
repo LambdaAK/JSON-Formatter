@@ -53,6 +53,7 @@ lexTokens [] = Suc []
 lexTokens s =
     case s of
         ' ' : xs -> lexTokens xs
+        '\n': xs -> lexTokens xs
         'f' : 'a' : 'l' : 's' : 'e' : xs -> do
             remainderTokens <- lexTokens xs
             return (FALSE:remainderTokens)

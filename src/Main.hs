@@ -12,7 +12,7 @@ import ToString
 
 main :: IO ()
 main =
-    let s = "{\"b\": null, \"a\": true}" in
+    let s = "{\"b\": null, \"a\": true\n}" in
     let result :: Proc Node = do
             tokens :: [Token] <- lexTokens s
             (node :: Node, _) <- parse tokens
