@@ -3,7 +3,6 @@ module AST (
 )
 where
 
-
 import Data.Function
 
 data Node =
@@ -13,7 +12,6 @@ data Node =
     | NString String
     | NArray [Node]
     | NObject [(String, Node)]
-
 
 instance Show Node where
     show (NBool b) = "Bool (" ++ (if b then "true" else "false") ++ ")"
@@ -26,5 +24,10 @@ instance Show Node where
         let new_inside = if length inside > 0 then take (length inside - 2) inside else inside in
         "[" ++ new_inside ++ "]"
         
-    show (NObject pairs) = "{" ++ (pairs & map (\(k, v) -> k ++ ": " ++ show v) & foldl (\acc x -> acc ++ ", " ++ x) "") ++ "}"
-
+    show (NObject pairs) =
+        let inside = pairs & map (\(k, v) -> k ++ ": " ++ show v) & foldl (\acc x -> acc ++ x ++ ", ") "" in
+        if length inside > 0 then
+            let newInside = take (length inside - 2) inside in
+            "{" ++ (newInside) ++ "}"
+        else
+            "{}"

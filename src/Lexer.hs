@@ -68,7 +68,7 @@ lexTokens s =
                     (lexedString, remainder) <- lexString (x:xs)
                     let newToken = STRING lexedString in do
                         remainderTokens <- lexTokens remainder
-                        return (newToken:remainderTokens) & trace "a"
+                        return (newToken:remainderTokens)
             else if isDigit x
                 then do
                     (number, remainder) <- lexNumber (x:xs)
